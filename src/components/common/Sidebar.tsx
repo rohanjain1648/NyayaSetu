@@ -5,6 +5,7 @@ import { NavTabId } from './Header';
 interface SidebarProps {
   activeTab: NavTabId;
   onSelectTab: (tab: NavTabId) => void;
+  onGoHome: () => void;
   isOpen?: boolean;
   onClose?: () => void;
 }
