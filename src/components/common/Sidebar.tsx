@@ -1,14 +1,15 @@
 import React from 'react';
-import { Scale, BookOpen, Clock, FileText, ShieldAlert, Calendar, Bot, IndianRupee, Activity } from 'lucide-react';
+import { Scale, BookOpen, Clock, FileText, ShieldAlert, Calendar, Bot, IndianRupee, Activity, X } from 'lucide-react';
 import { NavTabId } from './Header';
 
 interface SidebarProps {
   activeTab: NavTabId;
   onSelectTab: (tab: NavTabId) => void;
-  onGoHome: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, onGoHome }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, onGoHome, isOpen, onClose }) => {
   const tabs = [
     { id: 'sanhita' as NavTabId, label: 'SanhitaX', sub: 'BNS/BNSS/BSA', icon: BookOpen },
     { id: 'calculator' as NavTabId, label: 'NyayaKram', sub: 'Limitation & Fees', icon: Clock },
@@ -21,27 +22,47 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, onGoHo
   ];
 
   return (
-    <aside className="w-64 h-screen sticky top-0 bg-white border-r border-slate-200 flex flex-col shadow-sm z-30">
-      {/* Logo Area */}
-      <div
-        onClick={onGoHome}
-        className="flex items-center gap-3 cursor-pointer group px-6 py-8 border-b border-slate-100"
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside 
+        className={`w-64 h-screen fixed md:sticky top-0 bg-white border-r border-slate-200 flex flex-col shadow-2xl md:shadow-sm z-50 transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
       >
-        <div className="p-2 rounded-xl bg-black text-white shadow-md group-hover:scale-105 transition-transform">
-          <Scale size={24} strokeWidth={2} />
-        </div>
-        <div>
-          <div className="flex items-center gap-1">
-            <span className="font-serif-legal font-extrabold text-lg tracking-wider text-slate-900">
-              NYAYASETU
-            </span>
-            <span className="font-serif-legal font-black text-lg text-slate-500">AI</span>
+        {/* Logo Area & Close Button */}
+        <div className="flex items-center justify-between px-6 py-8 border-b border-slate-100">
+          <div
+            onClick={onGoHome}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <div className="p-2 rounded-xl bg-black text-white shadow-md group-hover:scale-105 transition-transform">
+              <Scale size={24} strokeWidth={2} />
+            </div>
+            <div>
+              <div className="flex items-center gap-1">
+                <span className="font-serif-legal font-extrabold text-lg tracking-wider text-slate-900">
+                  NYAYASETU
+                </span>
+                <span className="font-serif-legal font-black text-lg text-slate-500">AI</span>
+              </div>
+              <p className="text-[9px] text-slate-500 font-mono-legal tracking-widest uppercase mt-0.5">
+                India Legal OS
+              </p>
+            </div>
           </div>
-          <p className="text-[9px] text-slate-500 font-mono-legal tracking-widest uppercase mt-0.5">
-            India Legal OS
-          </p>
+          {onClose && (
+            <button onClick={onClose} className="md:hidden p-2 -mr-2 text-slate-400 hover:text-slate-900 focus:outline-none">
+              <X size={20} />
+            </button>
+          )}
         </div>
-      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -84,5 +105,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, onGoHo
         </div>
       </div>
     </aside>
+    </>
   );
 };

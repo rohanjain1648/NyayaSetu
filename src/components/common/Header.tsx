@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Search, Sparkles } from 'lucide-react';
+import { Cpu, Search, Sparkles, Menu } from 'lucide-react';
 import { AISettings } from '../../types/legal';
 
 export type NavTabId = 'sanhita' | 'calculator' | 'drafting' | 'compliance' | 'copilot' | 'diary' | 'billing' | 'strategy';
@@ -10,20 +10,28 @@ interface HeaderProps {
   aiSettings: AISettings;
   onOpenSettings: () => void;
   onOpenSearch: () => void;
+  onToggleSidebar?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   aiSettings,
   onOpenSettings,
-  onOpenSearch
+  onOpenSearch,
+  onToggleSidebar
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200 shadow-sm">
       <div className="w-full px-6 py-4 flex items-center justify-between">
         {/* Left Side: Page Title or Context */}
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold text-slate-900 capitalize flex items-center gap-2">
+        <div className="flex items-center gap-3 shrink-0">
+          <button 
+            className="md:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900 focus:outline-none rounded-md"
+            onClick={onToggleSidebar}
+          >
+            <Menu size={24} />
+          </button>
+          <h1 className="text-lg md:text-xl font-bold text-slate-900 capitalize flex items-center gap-2">
             {activeTab === 'sanhita' ? 'SanhitaX' : 
              activeTab === 'calculator' ? 'NyayaKram' : 
              activeTab === 'drafting' ? 'Vakalat Studio' :
@@ -35,8 +43,8 @@ export const Header: React.FC<HeaderProps> = ({
           </h1>
         </div>
 
-        {/* Center: Search Bar (as requested by user) */}
-        <div className="flex-1 max-w-xl px-8">
+        {/* Center: Search Bar (hidden on very small screens) */}
+        <div className="hidden sm:flex flex-1 max-w-xl px-4 md:px-8">
           <div 
             onClick={onOpenSearch}
             className="w-full flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-lg cursor-pointer text-slate-500 transition-colors"

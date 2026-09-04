@@ -21,6 +21,7 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [isLanding, setIsLanding] = useState(true);
   const [activeTab, setActiveTab] = useState<NavTabId>('sanhita');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [sanhitaInitialQuery, setSanhitaInitialQuery] = useState('');
@@ -68,8 +69,13 @@ export function App() {
           {/* Left Sidebar */}
           <Sidebar 
             activeTab={activeTab} 
-            onSelectTab={setActiveTab} 
+            onSelectTab={(tab) => {
+              setActiveTab(tab);
+              setIsMobileMenuOpen(false);
+            }} 
             onGoHome={() => setIsLanding(true)} 
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
           />
 
           {/* Right Main Content Area */}
@@ -81,6 +87,7 @@ export function App() {
               aiSettings={aiSettings}
               onOpenSettings={() => setSettingsModalOpen(true)}
               onOpenSearch={() => setSearchModalOpen(true)}
+              onToggleSidebar={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             />
 
             {/* Main Content Area */}
