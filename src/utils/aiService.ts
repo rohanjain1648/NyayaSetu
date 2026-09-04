@@ -61,8 +61,8 @@ Always format your response with clear headings, bullet points, exact statutory 
       console.warn('Groq API error, falling back to offline legal intelligence:', e);
       return {
         text: `⚠️ Groq API connection issue (${e.message || 'Check API Key'}). Falling back to built-in Vidhi Intelligence:\n\n` +
-          generateOfflineLegalResponse(prompt).text,
-        citations: generateOfflineLegalResponse(prompt).citations
+          generateOfflineLegalResponse(prompt, contextHistory).text,
+        citations: generateOfflineLegalResponse(prompt, contextHistory).citations
       };
     }
   }
@@ -108,14 +108,14 @@ Always format your response with clear headings, bullet points, exact statutory 
       console.warn('OpenAI error, falling back to offline legal intelligence:', e);
       return {
         text: `⚠️ OpenAI API connection issue (${e.message || 'Check API Key'}). Falling back to built-in Vidhi Intelligence:\n\n` +
-          generateOfflineLegalResponse(prompt).text,
-        citations: generateOfflineLegalResponse(prompt).citations
+          generateOfflineLegalResponse(prompt, contextHistory).text,
+        citations: generateOfflineLegalResponse(prompt, contextHistory).citations
       };
     }
   }
 
   // Autonomous Offline Legal Jurisprudence Engine
-  return generateOfflineLegalResponse(prompt);
+  return generateOfflineLegalResponse(prompt, contextHistory);
 }
 
 function extractCitations(text: string): string[] {
@@ -131,9 +131,24 @@ function extractCitations(text: string): string[] {
   return citations;
 }
 
-export function generateOfflineLegalResponse(prompt: string): { text: string; citations: string[] } {
-  const q = prompt.toLowerCase();
+export function generateOfflineLegalResponse(prompt: string, contextHistory: { role: 'user' | 'assistant'; content: string }[] = []): { text: string; citations: string[] } {
+  const q = prompt.toLowerCase().trim();
   const citations: string[] = [];
+
+  // Conversational Context
+  if (['hi', 'hello', 'hey', 'namaste', 'pranam'].includes(q)) {
+    return {
+      text: "Namaste! I am your Vidhi Mitra AI. How can I assist you with your legal research, statutory mapping, or drafting today?",
+      citations: []
+    };
+  }
+  
+  if (q.includes('thanks') || q.includes('thank you') || q.includes('dhanyawad')) {
+    return {
+      text: "You are very welcome! Feel free to ask if you need further Supreme Court citations, limitation timelines, or procedural guidance.",
+      citations: []
+    };
+  }
 
   // Match BNS / BNSS / Sanhita queries
   if (q.includes('bail') || q.includes('437') || q.includes('439') || q.includes('480') || q.includes('483') || q.includes('479')) {
